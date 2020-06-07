@@ -4,43 +4,20 @@
 
 ## About
 
-This project uses [Feathers](http://feathersjs.com). An open source web framework for building modern real-time applications.
+NodeJS приложение (только Backend) с авторизацией для crud операций продуктов. 
 
-## Getting Started
+Уведомление о создании или обновление создателя (author) продукта доступно автору продукта после аутентификации через вебсокет.
+То есть сначала получаем токен по REST протоколу, GET запрос на /authentication, а затем socket.emit('auth', <token>).
+Далее передаем по REST заголовое Authorization: <token>, и если у user есть права админа, то он может делать все операции, если нет - только создавать новые продукты.
 
-Getting up and running is as easy as 1, 2, 3.
+Реализовать валидацию входных данных для методов создания/обновления: реализована простая валидация на обязательные поля name и author, description не обязателен.
 
-1. Make sure you have [NodeJS](https://nodejs.org/) and [npm](https://www.npmjs.com/) installed.
-2. Install your dependencies
+Для сервиса продуктов написать тесты.
+TODO
 
-    ```
-    cd path/to/product-crud-app
-    npm install
-    ```
+Структура приложения должна придерживаться архитектуры feathers.
+... которая генерируется cli feathers, тут-то, кажется, ничего сложного.
 
-3. Start your app
+Но вот с каналами в feathers я так и не подружилась, и оттого сокеты реализованы на более низком уровне.
 
-    ```
-    npm start
-    ```
-
-## Testing
-
-Simply run `npm test` and all your tests in the `test/` directory will be run.
-
-## Scaffolding
-
-Feathers has a powerful command line interface. Here are a few things it can do:
-
-```
-$ npm install -g @feathersjs/cli          # Install Feathers CLI
-
-$ feathers generate service               # Generate a new Service
-$ feathers generate hook                  # Generate a new Hook
-$ feathers help                           # Show all commands
-```
-
-## Help
-
-For more information on all the things you can do with Feathers visit [docs.feathersjs.com](http://docs.feathersjs.com).
 
