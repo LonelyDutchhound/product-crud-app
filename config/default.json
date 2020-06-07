@@ -1,0 +1,22 @@
+{
+  "host": "localhost",
+  "port": 3030,
+  "public": "../public/",
+  "paginate": {
+    "default": 10,
+    "max": 50
+  },
+  "authentication": {
+    "entity": "user",
+    "service": "users",
+    "secret": "4vfbE4/Ci4D4nkrhb4HWHhsFhzg=",
+    "authStrategies": [
+      "local"
+    ],
+    "local": {
+      "usernameField": "email",
+      "passwordField": "password"
+    }
+  },
+  "mongodb": "mongodb+srv://LonelyDutchhound:188651@cluster0-xlwy0.gcp.mongodb.net/for-product-crud-app?retryWrites=true&w=majority"
+}

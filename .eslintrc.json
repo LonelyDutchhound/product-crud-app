@@ -1,0 +1,30 @@
+{
+  "env": {
+    "es6": true,
+    "node": true,
+    "jest": true
+  },
+  "parserOptions": {
+    "ecmaVersion": 2018
+  },
+  "extends": "google",
+  "rules": {
+    "max-len": ["error",
+      {
+        "code": 85
+      }
+    ],
+    "require-jsdoc": [
+      "error",
+      {
+        "require": {
+          "FunctionDeclaration": false,
+          "MethodDefinition": false,
+          "ArrowFunctionExpression": false,
+          "ClassDeclaration": false,
+          "FunctionExpression": false
+        }
+      }
+    ]
+  }
+}
