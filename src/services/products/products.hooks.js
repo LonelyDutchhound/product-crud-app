@@ -1,4 +1,5 @@
 const validateProduct = require('../../hooks/validate-product');
+const getPermissions = require('../../hooks/getPermissions');
 
 module.exports = {
   before: {
@@ -6,9 +7,9 @@ module.exports = {
     find: [],
     get: [],
     create: [validateProduct()],
-    update: [validateProduct()],
-    patch: [],
-    remove: [],
+    update: [validateProduct(), getPermissions()],
+    patch: [getPermissions()],
+    remove: [getPermissions()],
   },
 
   after: {

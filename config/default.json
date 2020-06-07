@@ -11,8 +11,18 @@
     "service": "users",
     "secret": "4vfbE4/Ci4D4nkrhb4HWHhsFhzg=",
     "authStrategies": [
+      "jwt",
       "local"
     ],
+    "jwtOptions": {
+      "header": {
+        "typ": "access"
+      },
+      "audience": "https://yourdomain.com",
+      "issuer": "feathers",
+      "algorithm": "HS256",
+      "expiresIn": "1d"
+    },
     "local": {
       "usernameField": "email",
       "passwordField": "password"

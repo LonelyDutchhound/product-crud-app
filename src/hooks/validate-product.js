@@ -1,4 +1,4 @@
-module.exports = function(options = {}) {
+module.exports = (options = {}) => {
   return async (context) => {
     const {data} = context;
     if (!data.name || !data.author) {

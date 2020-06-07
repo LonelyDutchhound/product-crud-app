@@ -2,10 +2,31 @@
 const cluster = require('cluster');
 const logger = require('./logger');
 const app = require('./app');
-const port = app.get('port');
-const hostname = app.get('host');
+const messageTypes = require('../src/helpers/message-types');
 
 if (cluster.isMaster) {
+  const userWorkerMap = {};
+
+  const handleWorkerMessages = (worker, msg) => {
+    const {user, type, payload} = msg;
+
+    switch (type) {
+      case messageTypes.addToUserWorkerMap:
+        userWorkerMap[user] = worker;
+        break;
+      case messageTypes.removeFromUserWorkerMap:
+        delete userWorkerMap[user];
+        break;
+      case messageTypes.handleMessage:
+        if (userWorkerMap[user]) {
+          userWorkerMap[user].send({user, payload});
+        }
+        break;
+    }
+  };
+
+  cluster.on('message', handleWorkerMessages);
+
   const cpuQuantity = require('os').cpus().length;
 
   for (let i = 0; i <= cpuQuantity; i++) {
@@ -13,9 +34,9 @@ if (cluster.isMaster) {
     cluster.fork();
   }
 
-  cluster.on('listening', (worker, address) => {
+  cluster.on('listening', (worker) => {
     logger.info(
-        `Worker #${worker.id} is now connected to ${JSON.stringify(address)}`);
+        `Worker #${worker.id} is now connected`);
   });
 
   cluster.on('disconnect', (worker) => {
@@ -27,6 +48,9 @@ if (cluster.isMaster) {
     cluster.fork();
   });
 } else {
+  const port = app.get('port');
+  const hostname = app.get('host');
+
   app
       .listen(port)
       .on('listening', () =>
@@ -38,9 +62,5 @@ if (cluster.isMaster) {
     logger.error(err.stack);
     process.exit(1);
   });
-
-  process.on('unhandledRejection', (reason, p) =>
-    logger.error('Unhandled Rejection at: Promise ', p, reason),
-  );
 }
 

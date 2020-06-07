@@ -1,5 +1,4 @@
 const {authenticate} = require('@feathersjs/authentication').hooks;
-const retrievePermissions = require('../../hooks/retrieve-permissions');
 const {
   hashPassword, protect,
 } = require('@feathersjs/authentication-local').hooks;
@@ -9,9 +8,9 @@ module.exports = {
     all: [],
     find: [authenticate('jwt')],
     get: [authenticate('jwt')],
-    create: [hashPassword('password'), retrievePermissions()],
-    update: [hashPassword('password'), authenticate('jwt'), retrievePermissions()],
-    patch: [hashPassword('password'), authenticate('jwt'), retrievePermissions()],
+    create: [hashPassword('password')],
+    update: [hashPassword('password'), authenticate('jwt')],
+    patch: [hashPassword('password'), authenticate('jwt')],
     remove: [authenticate('jwt')],
   },
 
