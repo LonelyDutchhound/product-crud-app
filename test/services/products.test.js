@@ -1,24 +1,33 @@
+const assert = require('assert');
 const app = require('../../src/app');
+
 
 describe('\'products\' service', () => {
   it('registered the service', () => {
     const service = app.service('products');
-    expect(service).toBeTruthy();
+
+    assert.ok(service, 'Registered the service');
   });
 
-  it('should create product if validation succeed', async () => {
-    const service = app.service('products');
-    const product = {
-      name: 'Product',
-      author: 'Author',
-      description: 'Description',
-    };
+  it('creates a product', async () => {
+    const product = await app.service('products').create({
+      name: 'product name',
+      author: 'product author',
+      description: 'product description',
+    });
 
-    try {
-      await app.service('products').create(product);
-      expect(service.create(product)).toContain(product);
-    } catch (error) {
-      // Do nothing
-    }
+    assert.strictEqual(product.name, 'product name');
+    assert.strictEqual(product.author, 'product author');
+    assert.strictEqual(product.description, 'product description');
+  });
+
+  xit('does not create a product if required fields missing', async () => {
+    const create = async () => await app.service('products').create({
+      name: '',
+      author: '',
+      description: 'product description',
+    });
+
+    assert.throws(create, Error);
   });
 });

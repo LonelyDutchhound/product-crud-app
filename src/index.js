@@ -3,6 +3,7 @@ const cluster = require('cluster');
 const logger = require('./logger');
 const app = require('./app');
 const messageTypes = require('../src/helpers/message-types');
+const processMessageCreator = require('../src/helpers/process-message-creator');
 
 if (cluster.isMaster) {
   const userWorkerMap = {};
@@ -50,12 +51,36 @@ if (cluster.isMaster) {
 } else {
   const port = app.get('port');
   const hostname = app.get('host');
+  const sendToMaster = (msg) => process.send(msg);
+  const appProductService = app.service('products');
 
   app
       .listen(port)
       .on('listening', () =>
         logger.info(`Feathers server listening on ${hostname}:${port}`),
       );
+
+  appProductService.on('created', (data) => {
+    const processMessage = processMessageCreator(
+        data.author,
+        'product created',
+        data.name);
+    sendToMaster(processMessage);
+  });
+  appProductService.on('updated', (data) => {
+    const processMessage = processMessageCreator(
+        data.author,
+        'product updated',
+        data.name);
+    sendToMaster(processMessage);
+  });
+  appProductService.on('removed', (data) => {
+    const processMessage = processMessageCreator(
+        data.author,
+        'product deleted',
+        data.name);
+    sendToMaster(processMessage);
+  });
 
   process.on('uncaughtException', (err) => {
     logger.error(`${(new Date).toUTCString()} uncaught exception: ${err.message}`);

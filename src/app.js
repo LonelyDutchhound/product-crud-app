@@ -9,6 +9,7 @@ const express = require('@feathersjs/express');
 
 const services = require('./services');
 const appHooks = require('./app.hooks');
+const channels = require('./channels');
 
 const authentication = require('./authentication');
 const mongoose = require('./mongoose');
@@ -67,6 +68,7 @@ app.configure(socketIO(socketConfig));
 app.use(express.notFound());
 app.use(express.errorHandler({logger}));
 
+app.configure(channels);
 app.hooks(appHooks);
 
 module.exports = app;

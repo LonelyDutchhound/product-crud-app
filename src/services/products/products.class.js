@@ -1,5 +1,4 @@
 const {Service} = require('feathers-mongoose');
-const processMessageCreator = require('../../helpers/process-message-creator');
 
 exports.Products = class Products extends Service {
   async find(params) {
@@ -13,15 +12,7 @@ exports.Products = class Products extends Service {
       author,
       description,
     };
-    const createdProduct = await super.create(productData);
-
-    const processMessage = processMessageCreator(
-        author,
-        'product created',
-        createdProduct.name);
-    process.send(processMessage);
-
-    return createdProduct;
+    return await super.create(productData);
   }
 
   async update(id, data, params) {
@@ -31,27 +22,11 @@ exports.Products = class Products extends Service {
       author,
       description,
     };
-    const updatedProduct = await super.update(id, newProductData);
-
-    const processMessage = processMessageCreator(
-        author,
-        'product updated',
-        updatedProduct.name);
-    process.send(processMessage);
-
-    return updatedProduct;
+    return await super.update(id, newProductData);
   };
 
   async remove(id, params) {
-    const deletedProduct = await super.remove(id, params);
-
-    const processMessage = processMessageCreator(
-        deletedProduct.author,
-        'product deleted',
-        deletedProduct.name);
-    process.send(processMessage);
-
-    return deletedProduct;
+    return await super.remove(id, params);
   }
 };
 
