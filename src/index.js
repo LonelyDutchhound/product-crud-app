@@ -60,15 +60,17 @@ if (cluster.isMaster) {
         logger.info(`Feathers server listening on ${hostname}:${port}`),
       );
 
-  const eventName = 'created' || 'updated' || 'deleted';
-
-  appProductService.on(eventName, (data) => {
-    const processMessage = processMessageCreator(
-        data.author,
-        eventName,
-        data.name);
-    sendToMaster(processMessage);
+  const eventsName = ['created', 'updated', 'removed'];
+  eventsName.forEach((eventName) => {
+    appProductService.on(eventName, (data) => {
+      const processMessage = processMessageCreator(
+          data.author,
+          eventName,
+          data.name);
+      sendToMaster(processMessage);
+    });
   });
+
 
   process.on('uncaughtException', (err) => {
     logger.error(`${(new Date).toUTCString()} uncaught exception: ${err.message}`);
