@@ -60,24 +60,12 @@ if (cluster.isMaster) {
         logger.info(`Feathers server listening on ${hostname}:${port}`),
       );
 
-  appProductService.on('created', (data) => {
+  const eventName = 'created' || 'updated' || 'deleted';
+
+  appProductService.on(eventName, (data) => {
     const processMessage = processMessageCreator(
         data.author,
-        'product created',
-        data.name);
-    sendToMaster(processMessage);
-  });
-  appProductService.on('updated', (data) => {
-    const processMessage = processMessageCreator(
-        data.author,
-        'product updated',
-        data.name);
-    sendToMaster(processMessage);
-  });
-  appProductService.on('removed', (data) => {
-    const processMessage = processMessageCreator(
-        data.author,
-        'product deleted',
+        eventName,
         data.name);
     sendToMaster(processMessage);
   });
